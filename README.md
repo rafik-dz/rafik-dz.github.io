@@ -7,6 +7,8 @@ Welcome to my GitHub 🌐
 
 
 
+
 ## About Me
-- hacker and ctf player;
+
+- hacker and ctf player.
 
