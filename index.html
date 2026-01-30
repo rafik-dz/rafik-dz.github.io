@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Ryan M. Montgomery - 0day</title>
+    
+    <!-- Meta Tags -->
+    <meta name="author" content="rafik">
+    <meta name="description" content="rafik (0day) - hacker">
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Righteous|Ubuntu+Mono:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <style>
+        :root {
+            --primary-text: #1a1a1a;
+            --secondary-text: #4a4a4a;
+            --accent-color: #000000;
+            --tech-blue: #0070f3; /* For highlights */
+            --bg-color: #ffffff;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--primary-text);
+            font-family: 'Ubuntu Mono', monospace;
+            overflow: hidden; 
+            cursor: none; /* Hide default cursor to show custom one */
+        }
+
+        /* Custom Cursor Elements */
+        #cursor-dot, #cursor-ring {
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease-out, opacity 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        #cursor-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--tech-blue);
+        }
+
+        #cursor-ring {
+            width: 35px;
+            height: 35px;
+            border: 1.5px solid var(--primary-text);
+            transition: width 0.3s, height 0.3s, border-color 0.3s;
+        }
+
+        /* Particle Background */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            background: radial-gradient(circle at center, #ffffff 0%, #f4f4f4 100%);
+        }
+
+        /* Main Content wrapper */
+        .main-wrapper {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            pointer-events: none; /* Let mouse interact with particles behind text */
+            opacity: 0;
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        .profile-card {
+            pointer-events: auto; /* Re-enable for the card */
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            max-width: 900px;
+            padding: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .avatar {
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.1);
+            background: #fff;
+            border: 2px solid #fff;
+        }
+
+        .name-title {
+            font-family: 'Righteous', cursive;
+            font-size: 5.5rem;
+            margin: 0;
+            line-height: 0.9;
+            letter-spacing: -2px;
+            color: var(--accent-color);
+        }
+
+        .full-name {
+            font-size: 1.8rem;
+            margin: 15px 0 5px 0;
+            font-weight: 400;
+        }
+
+        .bio {
+            font-size: 1.05rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .social-bar {
+            display: flex;
+            gap: 22px;
+        }
+
+        .social-bar a {
+            color: var(--primary-text);
+            font-size: 1.7rem;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+        }
+
+        .social-bar a:hover {
+            color: var(--tech-blue);
+            transform: translateY(-3px);
+        }
+
+        /* PGP Component */
+        .pgp-container {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 100;
+        }
+
+        .pgp-details {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            backdrop-filter: blur(8px);
+            cursor: pointer;
+        }
+
+        .pgp-summary {
+            list-style: none;
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pgp-content {
+            padding: 15px;
+            font-size: 10px;
+            max-height: 200px;
+            width: 350px;
+            background: #fcfcfc;
+        }
+
+        /* Hover states for the custom cursor */
+        a:hover ~ #cursor-ring, 
+        .pgp-details:hover ~ #cursor-ring {
+            width: 50px;
+            height: 50px;
+            border-color: var(--tech-blue);
+            background: rgba(0, 112, 243, 0.05);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            body { overflow-y: auto; cursor: auto; }
+            #cursor-dot, #cursor-ring { display: none; }
+            .profile-card { flex-direction: column; text-align: center; }
+            .name-title { font-size: 4rem; }
+            .social-bar { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Custom Cursor Elements -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<div id="particles-js"></div>
+
+<div class="main-wrapper">
+    <div class="profile-card">
+        <div class="avatar-container">
+            <img src="img/avatar.png" class="avatar" alt="cutie" onerror="this.src='https://tryhackme-images.s3.amazonaws.com/user-avatars/61a9fa406226730044b4ac55-1704491231028'">
+        </div>
+
+        <div class="info-container">
+            <h1 class="name-title">cutie</h1>
+            <h2 class="full-name">Rafik. DZ</h2>
+            <p class="bio">
+                hacker /<br>
+            </p>
+            
+            <div class="social-bar">
+                <a href="https://instagram.com/rafik.b.dz" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://tiktok.com/@tiktok" target="_blank"><i class="fa-brands fa-tiktok"></i></a>          
+                <a href="https://youtube.com/watch?v=ja-n6my6rKQ" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                <a href="https://www.linkedin.com/company/cisagov/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/rafik-dz" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="pgp-container">
+    <details class="pgp-details">
+        <summary class="pgp-summary">
+            <span id="pgp-arrow">&#9658;</span> Email Me (PGP): justtest@proton.me
+        </summary>
+        <pre class="pgp-content">
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+[Key data here]
+-----END PGP PUBLIC KEY BLOCK-----
+        </pre>
+    </details>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+<script>
+    /* CUSTOM CURSOR LOGIC */
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+
+    document.addEventListener('mousemove', (e) => {
+        // Dot moves instantly
+        dot.style.left = e.clientX + 'px';
+        dot.style.top = e.clientY + 'px';
+        
+        // Ring moves with a slight delay (via CSS transition)
+        ring.style.left = e.clientX + 'px';
+        ring.style.top = e.clientY + 'px';
+    });
+
+    document.addEventListener('mousedown', () => {
+        ring.style.width = '25px';
+        ring.style.height = '25px';
+    });
+
+    document.addEventListener('mouseup', () => {
+        ring.style.width = '35px';
+        ring.style.height = '35px';
+    });
+
+    /* PARTICLE CONFIG (High Visibility + Integrated Mouse) */
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 110, "density": { "enable": true, "value_area": 900 } },
+        "color": { "value": ["#111111", "#0070f3"] },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.8 },
+        "size": { "value": 2.5, "random": true },
+        "line_linked": {
+          "enable": true,
+          "distance": 160,
+          "color": "#444444",
+          "opacity": 0.4,
+          "width": 1.2
+        },
+        "move": {
+          "enable": true,
+          "speed": 1.8,
+          "out_mode": "out"
+        }
+      },
+      "interactivity": {
+        "detect_on": "window",
+        "events": {
+          "onhover": { "enable": true, "mode": "grab" },
+          "onclick": { "enable": true, "mode": "push" },
+          "resize": true
+        },
+        "modes": {
+          "grab": { "distance": 220, "line_linked": { "opacity": 1 } },
+          "push": { "particles_nb": 4 }
+        }
+      },
+      "retina_detect": true
+    });
+
+    // PGP Arrow Toggler
+    const details = document.querySelector('.pgp-details');
+    const arrow = document.querySelector('#pgp-arrow');
+    details.addEventListener('toggle', () => {
+        arrow.innerHTML = details.open ? '&#9660;' : '&#9658;';
+    });
+</script>
+
+</body>
+</html>
